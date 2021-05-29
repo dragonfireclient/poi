@@ -151,11 +151,17 @@ function poi.set_hud_info(text)
     local lp=minetest.localplayer
     if not lp then return end
     local vspeed=lp:get_velocity()
+    local etatime=-1
+    if not (poi.speed == 0) then etatime = ws.round2(dst / poi.speed / 60,2) end
+    poi.etatime=etatime
     local ttext=text.."\nSpeed: "..speed.."n/s\n"
     ..ws.round2(vspeed.x,2) ..','
     ..ws.round2(vspeed.y,2) ..','
     ..ws.round2(vspeed.z,2) .."\n"
     .."Yaw:"..ws.round2(lp:get_yaw(),2).."° Pitch:" ..ws.round2(lp:get_pitch(),2).."° " .. ws.getdir()
+    if poi.last_pos then
+        ttext=ttext .. "\n" poi.last_name .. "\n" .. ws.pos_to_string(poi.last_pos .. "\n" .. "ETA" .. etatime .. " mins"
+    end
     if minetest.settings:get_bool('poi_shownames') then
         ttext=ttext.."\n"..poi.get_local_name()
     end
