@@ -369,6 +369,7 @@ minetest.register_chatcommand('add_waypoint_here', {
     description = 'marks the current position',
     func = function(param)
         local name = os.date("%Y-%m-%d %H:%M:%S")
+        if tostring(param) ~= "" then name=param end
         local pos  = minetest.localplayer:get_pos()
         return poi.set_waypoint(pos, name), 'Done!'
     end
