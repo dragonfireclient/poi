@@ -77,8 +77,7 @@ minetest.register_globalstep(function(dtime)
 
     if lpos then
         local dst=vector.distance(minetest.localplayer:get_pos(),lpos)
-        speed=ws.round2(dst,1)
-        poi.speed=speed
+        poi.speed=ws.round2(dst,1)
     end
     lpos=minetest.localplayer:get_pos()
 end)
@@ -154,7 +153,7 @@ function poi.set_hud_info(text)
     local etatime=-1
     if not (poi.speed == 0) then etatime = ws.round2(dst / poi.speed / 60,2) end
     poi.etatime=etatime
-    local ttext=text.."\nSpeed: "..speed.."n/s\n"
+    local ttext=text.."\nSpeed: "..poi.speed.."n/s\n"
     ..ws.round2(vspeed.x,2) ..','
     ..ws.round2(vspeed.y,2) ..','
     ..ws.round2(vspeed.z,2) .."\n"
