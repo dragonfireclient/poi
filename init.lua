@@ -70,17 +70,19 @@ function poi.get_quad()
 	return quad
 end
 
-minetest.register_globalstep(function(dtime)
-	if not minetest.localplayer then return end
-	etime = etime + dtime
-	if etime < 1 then return end
+local lpos = nil
 
-	if lpos then
-		local dst=vector.distance(minetest.localplayer:get_pos(),lpos)
-		poi.speed=ws.round2(dst,1)
+local function update_speed()
+	if minetest.localplayer then
+		local cpos = minetest.localplayer:get_pos()
+		if lpos and cpos then
+			poi.speed = ws.round2(vector.distance(cpos,lpos),2)
+		end
+		lpos=cpos
 	end
-	lpos=minetest.localplayer:get_pos()
-end)
+	minetest.after(1,update_speed)
+end
+minetest.after(1,update_speed)
 
 
 minetest.register_on_death(function()
@@ -151,6 +153,7 @@ function poi.set_hud_info(text)
 	if not lp then return end
 	local vspeed=lp:get_velocity()
 	local etatime=-1
+	local dst = vector.distance(lp:get_pos(),poi.last_pos)
 	if not (poi.speed == 0) then etatime = ws.round2(dst / poi.speed / 60,2) end
 	poi.etatime=etatime
 	local ttext=text.."\nSpeed: "..poi.speed.."n/s\n"
