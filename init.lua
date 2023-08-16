@@ -30,7 +30,6 @@ function poi.getwps()
 	return wp
 end
 
-
 function poi.set_waypoint(pos, name)
 	pos = ws.pos_to_string(pos)
 	if not pos then return end
@@ -125,12 +124,6 @@ function poi.set_hud_wp(pos, title)
 	end
 	return true
 end
-
-
-
-
-
-
 
 function poi.get_nearest_name()
 	local ww=poi.getwps()
@@ -383,7 +376,6 @@ minetest.register_chatcommand('add_waypoint_here', {
 ws.register_chatcommand_alias('add_waypoint_here', 'wah', 'add_wph')
 
 minetest.register_chatcommand('clear_waypoint', {
-	params = '',
 	description = 'Hides the displayed waypoint.',
 	func = function(param)
 		if poi.flying then poi.flying=false end
