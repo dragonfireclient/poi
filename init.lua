@@ -88,12 +88,20 @@ minetest.register_on_death(function()
 	if minetest.localplayer then
 		local name = 'Death waypoint'
 		local pos  = minetest.localplayer:get_pos()
+		poi.death_pos = vector.new(pos)
 		poi.last_pos = pos
 		poi.last_name = name
 		poi.set_waypoint(pos,name)
 		poi.display(pos,name)
+		if minetest.settings:get_bool("death_tp") then
+			minetest.after(0.2,function()
+				minetest.localplayer:set_pos(poi.death_pos)
+			end)
+		end
 	end
 end)
+
+ws.rg("DeathTP","Player","death_tp",function()end,function()end,function()end,{"autorespawn"})
 
 function poi.set_hud_wp(pos, title)
 	pos = ws.string_to_pos(pos)
