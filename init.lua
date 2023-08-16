@@ -1,4 +1,3 @@
-
 poi={}
 local storage = minetest.get_mod_storage()
 local info=minetest.get_server_info()
@@ -332,9 +331,6 @@ minetest.register_on_formspec_input(function(formname, fields)
 	end
 	return true
 end)
-
-
-
 
 minetest.register_chatcommand('waypoints', {
 	params	  = '',
