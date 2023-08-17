@@ -70,7 +70,7 @@ end
 
 local lpos = nil
 
-local function update_speed()
+local function update_speed() --to be called once a second by globalstep to get speed in nodes per second
 	if minetest.localplayer then
 		local cpos = minetest.localplayer:get_pos()
 		if lpos and cpos then
@@ -78,10 +78,7 @@ local function update_speed()
 		end
 		lpos=cpos
 	end
-	minetest.after(1,update_speed)
 end
-minetest.after(1,update_speed)
-
 
 minetest.register_on_death(function()
 	if minetest.localplayer then
@@ -146,16 +143,21 @@ function poi.get_nearest_name()
 	return rt
 end
 
+local function calculate_eta(tpos,speed)
+	local etatime = -1
+	local dst = vector.distance(ws.dircoord(0,0,0),tpos)
+	if not (poi.speed == 0) then etatime = ws.round2(dst / poi.speed / 60,2) end
+	return etatime
+end
+
 
 function poi.set_hud_info(text)
 	if type(text) ~= "string" then return end
 	local lp=minetest.localplayer
 	if not lp then return end
 	local vspeed=lp:get_velocity()
-	local etatime=-1
-	local dst = vector.distance(lp:get_pos(),poi.last_pos)
-	if not (poi.speed == 0) then etatime = ws.round2(dst / poi.speed / 60,2) end
-	poi.etatime=etatime
+	local etatime=calculate_eta(poi.last_pos, poi.speed)
+	poi.etatime = etatime
 	local ttext=text.."\nSpeed: "..poi.speed.."n/s\n"
 	..ws.round2(vspeed.x,2) ..','
 	..ws.round2(vspeed.y,2) ..','
@@ -263,6 +265,18 @@ function poi.display_formspec()
 	-- Display the formspec
 	return minetest.show_formspec('poi-csm', formspec)
 end
+
+local speed_etime = 1
+minetest.register_globalstep(function(dtime)
+	speed_etime = speed_etime - dtime
+	if speed_etime > 0 then return end
+	speed_etime = 1
+	update_speed()
+	if poi.last_pos then
+		poi.etatime = calculate_eta(poi.last_pos, poi.speed)
+	end
+end)
+
 
 minetest.register_on_formspec_input(function(formname, fields)
 	if formname == 'poi-ignore' then
