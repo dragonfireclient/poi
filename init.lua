@@ -162,7 +162,7 @@ function poi.set_hud_info(text)
 	..ws.round2(vspeed.x,2) ..','
 	..ws.round2(vspeed.y,2) ..','
 	..ws.round2(vspeed.z,2) .."\n"
-	.."Yaw:"..ws.round2(lp:get_yaw(),2).."° Pitch:" ..ws.round2(lp:get_pitch(),2).."° " .. ws.getdir()
+	.."Yaw:"..tostring(ws.round2(lp:get_yaw(),2)).."° Pitch:" ..tostring(ws.round2(lp:get_pitch(),2)).."° " .. tostring(ws.getdir())
 	if poi.last_pos and poi.last_name then
 		ttext=ttext .. "\n" .. poi.last_name .. "\n" .. ws.pos_to_string(poi.last_pos) .. "\n" .. "ETA" .. etatime .. " mins"
 	end
