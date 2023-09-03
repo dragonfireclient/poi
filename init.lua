@@ -232,19 +232,29 @@ function poi.register_transport(name,func)
 	table.insert(poi.registered_transports,{name=name,func=func})
 end
 function poi.display_formspec()
-	local formspec = 'size[6.25,9]' ..
-					 'label[0,0;Waypoint list]' ..
+	local formspec = "formspec_version[4]"..
+		"size[12,10]" ..
+		"background9[1,1;1,1;blank.png;true;7]"..
+		"bgcolor[#000000AA;false]"..
 
-					 'button_exit[0,7.5;1,0.5;display;Show]' ..
-					 'button[3.625,7.5;1.3,0.5;rename;Rename]' ..
-					 'button[4.9375,7.5;1.3,0.5;delete;Delete]'
-	local sp=0
+		"label[0.25,0.5;Waypoint list]" ..
+
+		"button_exit[0.5,7.5;1,0.5;display;Show]" ..
+		"button[9,7.5;1.3,0.5;rename;Rename]" ..
+		"button[10.5,7.5;1.3,0.5;delete;Delete]"
+
+	local sp = 0.5
+	local y = 8.25
 	for k,v in pairs(poi.registered_transports) do
-		formspec=formspec..'button_exit['..sp..',8.5;1,0.5;'..v.name..';'..v.name..']'
-		sp=sp+0.8
+		formspec=formspec.."button_exit["..sp..","..y..";1,0.5;"..v.name..";"..v.name.."]"
+		sp=sp+1
+		if sp > 10 then
+			y = y + 0.75
+			sp = 0.5
+		end
 	end
 
-	formspec=formspec..'textlist[0,0.75;6,6;marker;'
+	formspec=formspec..'textlist[0.25,0.75;11.5,6;wp_list;'
 	local selected = 1
 	formspec_list = {}
 
@@ -273,11 +283,11 @@ function poi.display_formspec()
 			pos = minetest.formspec_escape(tostring(pos.x) .. ', ' ..
 			tostring(pos.y) .. ', ' .. tostring(pos.z))
 			pos = 'Waypoint position: ' .. pos
-			formspec = formspec .. 'label[0,6.75;' .. pos .. ']'
+			formspec = formspec .. 'label[0.25,7.25;' .. pos .. ']'
 		end
 	else
 		-- Draw over the buttons
-		formspec = formspec .. 'button_exit[0,7.5;5.25,0.5;quit;Close dialog]' ..
+		formspec = formspec .. 'button_exit[0,10.5;5.25,0.5;quit;Close dialog]' ..
 			'label[0,6.75;No waypoints. Add one with ".wa".]'
 	end
 
@@ -304,7 +314,7 @@ minetest.register_on_formspec_input(function(formname, fields)
 		return
 	end
 	local name = false
-	if fields.marker then
+	if fields.wp_list then
 		local event = minetest.explode_textlist_event(fields.marker)
 		if event.index then
 			name = formspec_list[event.index]
@@ -323,7 +333,7 @@ minetest.register_on_formspec_input(function(formname, fields)
 			end
 		end
 		if fields.display then
-			if poi.display_waypoint(name) then
+			if not poi.display_waypoint(name) then
 				ws.dcm('Error displaying waypoint!')
 				return
 			end
