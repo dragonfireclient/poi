@@ -181,7 +181,7 @@ function poi.set_hud_info(text)
 	..ws.round2(vspeed.x,2) ..','
 	..ws.round2(vspeed.y,2) ..','
 	..ws.round2(vspeed.z,2) .."\n"
-	.."Yaw:"..tostring(ws.round2(lp:get_yaw(),2)).."° Pitch:" ..tostring(ws.round2(lp:get_pitch(),2)).."° " .. tostring(ws.getdir())
+	.."Yaw:"..tostring(ws.round2(lp:get_yaw(),2)).."° Pitch:" ..tostring(ws.round2(lp:get_pitch(),2)).."° " .. tostring(ws.getdir() or "")
 	if poi.last_pos and poi.last_name then
 		ttext=ttext .. "\n" .. poi.last_name .. "\n" .. ws.pos_to_string(poi.last_pos) .. "\n" .. "ETA" .. etatime .. " mins"
 	end
@@ -315,7 +315,7 @@ minetest.register_on_formspec_input(function(formname, fields)
 	end
 	local name = false
 	if fields.wp_list then
-		local event = minetest.explode_textlist_event(fields.marker)
+		local event = minetest.explode_textlist_event(fields.wp_list)
 		if event.index then
 			name = formspec_list[event.index]
 		end
