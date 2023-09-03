@@ -4,6 +4,8 @@ local info=minetest.get_server_info()
 local stprefix="POI-".. info['address']  .. '-'
 local displayed_pois={}
 
+local DISTANCE_NEAR = 256
+
 local formspec_list = {}
 poi.registered_transports={}
 poi.speed=0
@@ -18,6 +20,14 @@ local etime=0
 
 local hud_wp
 local hud_info
+
+function poi.check_vector(v)
+	if not v then return false end
+	for _,d in pairs({"x","y","z"}) do
+		if not v[d] or not tonumber(v[d]) or minetest.is_nan(v[d]) then return false end
+	end
+	return true
+end
 
 function poi.getwps()
 	local wp={}
@@ -43,6 +53,15 @@ end
 
 function poi.get_waypoint(name)
 	return ws.string_to_pos(storage:get_string(stprefix .. tostring(name)))
+end
+
+function poi.has_wp_near(pos)
+	for _,v in pairs(poi.getwps()) do
+		local wpos = poi.get_waypoint(v)
+		if poi.check_vector(wpos) then
+			if vector.distance(pos,wpos) <= DISTANCE_NEAR then return true end
+		end
+	end
 end
 
 function poi.rename_waypoint(oldname, newname)
