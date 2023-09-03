@@ -90,7 +90,7 @@ minetest.register_on_death(function()
 		poi.set_waypoint(pos,name)
 		poi.display(pos,name)
 		if minetest.settings:get_bool("death_tp") then
-			minetest.after(0.2,function()
+			minetest.after(0.5,function()
 				minetest.localplayer:set_pos(poi.death_pos)
 			end)
 		end
