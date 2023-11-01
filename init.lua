@@ -447,5 +447,13 @@ minetest.register_chatcommand('wpdisplay', {
 })
 ws.register_chatcommand_alias('wpdisplay', 'wpd')
 
+minetest.register_chatcommand("dump_pois",{
+	func = function()
+		for name, pos in pairs(storage:to_table().fields) do
+			minetest.log(name.. " : "..pos)
+		end
+	end
+})
+
 minetest.register_cheat("ShowNames", "Render", "poi_shownames")
 minetest.register_cheat("POIs", "World", poi.display_formspec)
